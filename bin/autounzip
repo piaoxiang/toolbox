@@ -1,0 +1,63 @@
+#!/bin/bash
+# Copyright 2007 (c), Shandong University
+# All rights reserved.
+#
+# Filename   : autounzip
+# Description: Uncompress files,and print "OK" out if the file
+#              can be uncompressed successfully.
+#              Syntax     : autounzip <target>
+#              Support    : *.tar | *.zip | *.tgz
+#                           *.gz  | *.bz2 | *.bz
+# Author     : Liu Qingmin
+# Version    : 1.0
+# Date       : 2007-05-17
+#
+
+# Handle Parameters 
+if [ $# != 1 ]; then
+	echo "Usage: `basename $0` [*.tar|*.zip|*.tgz|*.gz|*.bz|*.bz2]"
+	exit 1
+fi
+
+# Assign the parameter to the Macro OPT
+OPT=$1
+
+# Uncompress files
+case $OPT in
+*.tar)
+	tar xvf $OPT && echo "OK"
+	;;
+*.tar.Z)
+	tar zxvf $OPT && echo "OK"
+	;;
+*.zip)
+	unzip $OPT && echo "OK"
+	;;
+*.tgz)
+	tar zxvf $OPT && echo "OK"
+	;;
+*.gz)
+	if echo $OPT | grep ".tar.gz" > /dev/null 2>&1; then
+		tar xvzf $OPT && echo "OK"
+	else
+		gunzip $OPT && echo "OK"
+	fi
+	;;
+*.bz2)
+	if echo $OPT | grep ".tar.bz2" > /dev/null 2>&1; then
+		tar jxvf $OPT && echo "OK"
+	else
+		bunzip2 $OPT && echo "OK"
+	fi
+	;;
+*.bz)
+	if echo $OPT | grep ".tar.bz" > /dev/null 2>&1; then
+		tar jxvf $OPT && echo "OK"
+	else
+		bunzip2 $OPT && echo "OK"
+	fi
+	;;
+*)
+	echo "File $OPT cannot be uncompressed with autounzip"
+	;;
+esac

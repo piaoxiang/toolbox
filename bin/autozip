@@ -1,0 +1,48 @@
+#!/bin/bash
+# Copyright 2007 (c), Shandong University
+# All rights reserved.
+#
+# Filename   : autozip
+# Description: Compress files, and print "OK" out if the file
+#              can be compressed successfully.
+#              Syntax     : autozip [filename | directory name]
+# Author     : Liu Qingmin
+# Version    : 1.0
+# Date       : 07-04-29
+#
+
+# Func: get_target()
+# Desc: Obtain the name of target file
+# Para: $1     -- file name that will be compressed
+# Ret : TARGET -- current file name 
+get_target() 
+{
+	TARGET=`echo $1 | \
+		awk -F/ '{if ($NF == "") print $(NF-1); \
+			  else print $(NF)}'`
+}
+
+# Handle Parameters
+if [ $# != 1 ];then
+	echo "Usage: `basename $0` <filename | directoryname>"
+	exit 1
+fi
+
+# Assign the parameter to the Macro OPT
+OPT=$1
+
+# Uncompress files
+if [ -d $OPT ]; then
+	get_target $OPT
+	tar zcvf ${TARGET}.tar.gz $OPT && echo "OK"
+elif [ -f $OPT ]; then
+	get_target $OPT
+	cp $OPT tmp
+	gzip tmp
+	cp tmp.gz ${TARGET}.gz
+	rm tmp.gz
+	if [ -x ${TARGET}.gz ]; then 
+		chmod -x ${TARGET}.gz
+	fi
+	echo "OK"
+fi
