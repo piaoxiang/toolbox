@@ -1,0 +1,45 @@
+#!/bin/bash
+# Copyright 2007 (c), Shandong University
+# All rights reserved.
+#
+# Filename   : net_state
+# Description: Test network state, and return 0 if good; else return 1
+# Author     : Liu Qingmin
+# Version    : 1.0
+# Date       : 2007-05-17
+#
+
+# Default Variable
+NET_GOOD=0             # the value of return if network state is good
+E_WRONG_ARGS=1         # error number of return if arguments are wrong
+E_NET_NOT_GOOD=2       # error number of return if network state is not good
+INTERVAL=2             # the time interval of ping
+TIMES=1                # the times every one
+LOSSRATE=0             # the loss rate if network is good
+
+# Handle Arguments
+case $1 in
+"")
+	echo "Usage: `basename $0` [TARGET IP or name]"
+	exit $E_WRONG_ARGS
+	;;
+*)
+	TARGET=$1
+	;;
+esac
+
+# Getch the loss rate
+lossrate=`ping -i $INTERVAL -c $TIMES $TARGET | \
+          grep -o "...%"                      | \
+          sed 's/,//g'                        | \
+          awk -F% '{print $1}'`
+
+# Handle the result
+if [ $lossrate != $LOSSRATE ]; then
+	echo "Network is not good"
+	exit $E_NET_NOT_GOOD
+else
+	echo "Network is good!"
+	exit $NET_GOOD
+fi
+
