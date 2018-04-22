@@ -1,0 +1,42 @@
+#!/bin/sh
+# Copyright 2007 (c), Shandong University
+# All rights reserved.
+#
+# Filename	: rmlink
+# Description	: solve the bug of "rm" and "unlink"
+#                 Syntax     : rmlink <linkfile name>
+# Author	: Liu Qingmin
+# Version	: 1.0
+# Date		: 07-09-19
+#
+
+# Func: get_target()
+# Desc: Obtain the name of target file
+# Para: $1     -- file name that will be compressed
+# Ret : TARGET -- current file name 
+get_target() 
+{
+	TARGET=`echo $1 | \
+		awk -F/ '{if ($NF == "") print $(NF-1); \
+			  else print $(NF)}'`
+}
+
+# Handle Parameters
+if [ $# != 1 ];then
+	echo "Usage: `basename $0` <linkfile name>"
+	exit 1
+fi
+
+# Assign the parameter to the Macro OPT
+OPT=$1
+
+# Uncompress files
+if [ -d $OPT ]; then
+	# eliminate the "/" at the ending
+	get_target $OPT
+	# you also can use "unlink" instead of "rm"
+	rm ${TARGET}
+fi
+
+# OK
+exit 0
