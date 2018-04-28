@@ -27,6 +27,9 @@ case $OPT in
 *.tar)
 	tar xvf $OPT && echo "OK"
 	;;
+*.xz)
+	tar xvJf $OPT && echo "OK"
+	;;
 *.tar.Z)
 	tar zxvf $OPT && echo "OK"
 	;;
