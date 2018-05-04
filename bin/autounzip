@@ -60,6 +60,9 @@ case $OPT in
 		bunzip2 $OPT && echo "OK"
 	fi
 	;;
+*.rpm)
+	rpm2cpio $OPT | cpio -div
+	;;
 *)
 	echo "File $OPT cannot be uncompressed with autounzip"
 	;;
