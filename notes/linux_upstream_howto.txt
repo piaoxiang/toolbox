@@ -1,0 +1,87 @@
+	Linux Upstream HOWTO
+
+0. Documentations
+
+Documentation/CodingStyle
+Documentation/SubmitChecklist
+Documentation/SubmittingDrivers
+Documentation/SubmittingPatches
+
+1. Fetch branches
+
+Generally speaking, you should develop based on latest stable kernel.
+
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+
+However, for some submodules, maintainer has its own git branch. Take RDMA as an
+example. You should add it to your git repo.
+
+git remote add linux-rdma git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
+git fetch linux-rdma
+
+Then you could base on linux-rdma to develop or fix bugs.
+
+2. Commit your modifications
+
+1) After you fix an issue or develop new features, first commit it locally.
+
+git commit -s -v
+
+2) generate the patches:
+
+git format-patch -M -n2 --cover-letter -s --subject-prefix="PATCH v1"
+
+Notes: if you fix an issue, you should add one line for it. e.g.
+
+Fixes: 1060f8653414 ("IB/{core/cm}: Fix generating a return AH for RoCE")
+
+git config --global core.abbrev 12
+git config --global pretty.fixes "Fixes: %h (\"%s\")"
+
+3) Modify 0000-*.patch and add subject.
+
+4) check codeing style
+./scripts/checkpatch.pl *.patch
+
+3. Send email
+
+1) Generally use git send-email
+
+Ubuntu:
+apt-get install git-email
+CentOS:
+yum install git-email
+
+Configuration with gmail:
+
+git config --global sendemail.from "Qingmin Liu <calmarrow@gmail.com>"
+git config --global sendemail.smtpserver smtp.gmail.com
+git config --global sendemail.smtpuser calmarrow@gmail.com
+git config --global sendemail.smtpencryption tls
+git config --global sendemail.smtpserverport 587
+
+2) Find the maintainer
+
+./scripts/get_maintainer.pl *.patch
+
+3) Send email
+
+Before you send out, please first test whether if it's suitable.
+
+git send-email --dry-run --to "Qingmin Liu <calmarrow@gmail.com>" *.patch
+git send-email --to "Qingmin Liu <calmarrow@gmail.com>" *.patch
+
+Then you could send it to maintainer for review.
+
+git send-email --to="Doug Ledford <dledford@redhat.com>" --cc="Jason Gunthorpe <jgg@ziepe.ca>" --cc=linux-rdma@vger.kernel.org *.patch
+
+4. Trace your patch from:
+https://patchwork.kernel.org
+
+Modify based on review.
+
+git rebase -i HEAD~2
+git commit --amend
+
+and then recreate patches and add a section.
+
