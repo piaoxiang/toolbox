@@ -1,0 +1,33 @@
+# Do some important numbers on SSD drives, to gauge what kind of
+# performance you might get out of them.
+#
+# Sequential read and write speeds are tested, these are expected to be
+# high. Random reads should also be fast, random writes are where crap
+# drives are usually separated from the good drives.
+#
+# This uses a queue depth of 4. New SATA SSD's will support up to 32
+# in flight commands, so it may also be interesting to increase the queue
+# depth and compare. Note that most real-life usage will not see that
+# large of a queue depth, so 4 is more representative of normal use.
+#
+[global]
+ioengine=libaio
+direct=1
+iodepth=128
+runtime=30
+time_based=1
+#gtod_reduce=1
+
+bs=512k
+
+write_bw_log=${FIO_PREFIX}
+write_lat_log=${FIO_PREFIX}
+write_iops_log=${FIO_PREFIX}
+
+[randread-aio-iscsi-Job]
+#filename=/dev/sdc:/dev/sdd:/dev/sde:/dev/sdf:/dev/sdg:/dev/sdh:/dev/sdi:/dev/sdj
+filename=/dev/sdc
+rw=randread
+numjobs=1
+group_reporting
+
