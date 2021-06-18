@@ -41,7 +41,7 @@ length=${DPDK_CHECKPATCH_LINE_LENGTH:-80}
 options="--no-tree"
 options="$options --max-line-length=$length"
 options="$options --show-types"
-options="$options --ignore=COMPARISON_TO_NULL,FILE_PATH_CHANGES,\
+options="$options --ignore=SPDX_LICENSE_TAG,COMPARISON_TO_NULL,FILE_PATH_CHANGES,\
 GERRIT_CHANGE_ID,GIT_COMMIT_ID,NETWORKING_BLOCK_COMMENT_STYLE,\
 NEW_TYPEDEFS,PREFER_ALIGNED,PREFER_KERNEL_TYPES,PREFER_PACKED,MISSING_SIGN_OFF"
 
